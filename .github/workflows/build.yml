@@ -1,20 +1,36 @@
-
+#
+# Licensed to the Apache Software Foundation (ASF) under one or more
+# contributor license agreements.  See the NOTICE file distributed with
+# this work for additional information regarding copyright ownership.
+# The ASF licenses this file to You under the Apache License, Version 2.0
+# (the "License"); you may not use this file except in compliance with
+# the License.  You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+#
 name: "build"
 
 on:
   push:
-    branches: [ 2.x, develop, master, 2.6.0]
+    branches: [ 2.6.0, develop, master ]
   pull_request:
-    branches: [ 2.x, develop, master, 2.6.0]
+    branches: [ 2.6.0, develop, master ]
     types: [opened, reopened, synchronize]
     paths-ignore:
       - '**.md'
 
 jobs:
+
   # job 2: Build and Release on 'arm64v8/ubuntu' OS (Skip tests).
   build_arm64-binary:
     runs-on: ubuntu-24.04-arm
-    if: ${{ github.event_name == 'push' && (github.ref_name == 'develop' || github.ref_name == 'snapshot' || github.ref_name == '2.x' || github.ref_name == '2.6.0') }}
+    if: ${{ github.event_name == 'push' && (github.ref_name == 'develop' || github.ref_name == 'snapshot' || github.ref_name == '2.6.0') }}
     strategy:
       fail-fast: false
     steps:
@@ -27,17 +43,16 @@ jobs:
         with:
           distribution: 'zulu'
           java-version: 25
-      # step 3
+      # step 4
       - name: "Print maven version"
         run: ./mvnw -version
-      # step 4
+      # step 3
       - name: "Build with Maven on 'ubuntu:24.04-arm' OS (Skip tests)"
         run: |
           ./mvnw -T 4C clean install \
               -Prelease-seata \
               -DskipTests \
               -e -B -Dorg.slf4j.simpleLogger.log.org.apache.maven.cli.transfer.Slf4jMavenTransferListener=warn
-              
       # 分开上传的写法
       - name: Upload seata server bin
         uses: actions/upload-artifact@v4
