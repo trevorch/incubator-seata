@@ -6,14 +6,14 @@
 # (the "License"); you may not use this file except in compliance with
 # the License.  You may obtain a copy of the License at
 #
-#    http://www.apache.org/licenses/LICENSE-2.0
+#     http://www.apache.org/licenses/LICENSE-2.0
 #
 # Unless required by applicable law or agreed to in writing, software
 # distributed under the License is distributed on an "AS IS" BASIS,
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-
+#
 name: "build"
 
 on:
@@ -57,21 +57,11 @@ jobs:
       - name: Upload seata server bin
         uses: actions/upload-artifact@v4
         with:
-          name: seata-server-bin
-          path: distribution/target/*.tar.gz
+          name: seata-v2.6.0
+          path: |
+            distribution/target/*.tar.gz
+            all/target/seata-all-*.jar
+            seata-spring-boot-starter/target/seata-spring-boot-starter-*.jar
           retention-days: 3
       
-      - name: Upload seata all jar
-        uses: actions/upload-artifact@v4
-        with:
-          name: seata-all-jar
-          path: all/target/seata-all-*.jar
-          retention-days: 3
-      
-      - name: Upload spring boot starter jar
-        uses: actions/upload-artifact@v4
-        with:
-          name: seata-spring-boot-starter-jar
-          path: seata-spring-boot-starter/target/seata-spring-boot-starter-*.jar
-          retention-days: 3
       
